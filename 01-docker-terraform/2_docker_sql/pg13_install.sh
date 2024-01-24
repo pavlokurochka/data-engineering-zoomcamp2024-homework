@@ -33,7 +33,7 @@ URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yell
     # --host=pg-database \
 
 docker run -it \
-  --network=2_docker_sql_default \
+  --network=pg-network \
     --name taxi_ingest \
   taxi_ingest:v001 \
     --user=root \
@@ -50,7 +50,7 @@ URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green
     # --host=pg-database \
 
 docker run -it \
-  --network=2_docker_sql_default \
+  --network=pg-network \
     --name taxi_ingest_green \
   taxi_ingest:v001 \
     --user=root \
@@ -65,22 +65,8 @@ URL="https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv"
   
     # --host=pg-database \
 
-# docker run -it \
-#   --network=pg-network \
-#     --name taxi_ingest_zones \
-#   taxi_ingest:v001 \
-#     --user=root \
-#     --password=root \
-#     --host=pg-database  \
-#     --port=5432 \
-#     --db=ny_taxi \
-#     --table_name=zones \
-#     --url=${URL}
-
-#  docker rm taxi_ingest_zones 
-
 docker run -it \
-  --network=2_docker_sql_default \
+  --network=pg-network \
     --name taxi_ingest_zones \
   taxi_ingest:v001 \
     --user=root \
@@ -90,3 +76,18 @@ docker run -it \
     --db=ny_taxi \
     --table_name=zones \
     --url=${URL}
+
+#  docker rm taxi_ingest_zones 
+#  docker start taxi_ingest_zones  -i
+
+# docker run -it \
+#   --network=2_docker_sql_default \
+#     --name taxi_ingest_zones \
+#   taxi_ingest:v001 \
+#     --user=root \
+#     --password=root \
+#     --host=pgdatabase  \
+#     --port=5432 \
+#     --db=ny_taxi \
+#     --table_name=zones \
+#     --url=${URL}
