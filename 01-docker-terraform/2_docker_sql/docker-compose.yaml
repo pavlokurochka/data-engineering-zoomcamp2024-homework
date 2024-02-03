@@ -26,6 +26,7 @@ networks:
     external: true
 
 # docker network create pg-network
+# docker compose build
 # docker-compose up -d
 # docker-compose down
 # docker ps
