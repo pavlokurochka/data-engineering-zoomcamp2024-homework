@@ -45,7 +45,8 @@ def upload_to_gcs(bucket_name, object_name, local_file):
         print(f"GCS: {object_name} already exists")
         return
     blob = bucket.blob(object_name)
-    blob.upload_from_filename(local_file)
+    blob.chunk_size = 5 * 1024 * 1024 # Set 5 MB blob size
+    blob.upload_from_filename(local_file, timeout=500)
     print(f"Loaded GCS: {object_name}")
 #%%
 def web_to_gcs(year, service):
@@ -78,9 +79,11 @@ def web_to_gcs(year, service):
 # df= pd.read_parquet(local_file_name, engine="pyarrow")
 # df.head()
 #%%
-web_to_gcs("2022", "green")
+# web_to_gcs("2019", "green")
 # web_to_gcs("2020", "green")
-# web_to_gcs('2019', 'yellow')
-# web_to_gcs('2020', 'yellow')
+web_to_gcs('2019', 'yellow')
+web_to_gcs('2020', 'yellow')
 
+# %%
+web_to_gcs("2019", "fhv")
 # %%
