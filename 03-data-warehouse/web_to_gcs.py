@@ -102,5 +102,5 @@ for m in range(1, 13):
     change_types = {"PUlocationID": "Int64", "DOlocationID": "Int64", "SR_Flag": "Int64"}
     df = df.astype(change_types)
     df.to_parquet(pq_file, index=False, compression='gzip')
-    print(f'Wrote to {pq_file=} size:{os.stat(pq_file)}')
+    print(f'Wrote to {pq_file=} size:{os.stat(pq_file).st_size}')
 # %%
