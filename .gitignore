@@ -10,3 +10,5 @@ target/
 dbt_packages/
 logs/
 # end dbt Cloud content
+05-batch/zones.parquet/*
+05-batch/*.csv
