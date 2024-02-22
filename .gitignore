@@ -14,3 +14,5 @@ logs/
 05-batch/*.csv*
 05-batch/code/fhvhv/*
 05-batch/code/*.csv.*
+05-batch/code/data
+05-batch/code/pq
