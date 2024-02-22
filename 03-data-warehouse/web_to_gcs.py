@@ -74,8 +74,8 @@ def web_to_gcs(year, service):
             print(f"Local file {local_file_name} already exists")
 
         # upload it to gcs
-        gcs_object_name = f"{service}/{year}/{file_name}"
-        upload_to_gcs(bucket, gcs_object_name, local_file_name)
+        # gcs_object_name = f"{service}/{year}/{file_name}"
+        # upload_to_gcs(bucket, gcs_object_name, local_file_name)
 
 
 # %%
@@ -84,23 +84,64 @@ def web_to_gcs(year, service):
 # %%
 # web_to_gcs("2019", "green")
 # web_to_gcs("2020", "green")
-web_to_gcs("2019", "yellow")
+# web_to_gcs("2021", "green")
+# web_to_gcs("2019", "yellow")
 web_to_gcs("2020", "yellow")
+# web_to_gcs("2021", "yellow")
 
 # %%
 web_to_gcs("2019", "fhv")
 # %%
 import pandas as pd
 import os
+import duckdb
+# from io import BytesIO
 # %%
-for m in range(1, 13):
-        # sets the month part of the file_name string
-    month = f"{m:02}"
-    pq_file = os.path.join("data",f"fhv_tripdata_2019-{month}.parquet")
-    df = pd.read_parquet(pq_file, dtype_backend='numpy_nullable' )
-    print(f'Read {pq_file=} size:{os.stat(pq_file).st_size} records:{df.shape[0]}')
-    change_types = {"PUlocationID": "Int64", "DOlocationID": "Int64", "SR_Flag": "Int64"}
-    df = df.astype(change_types)
-    df.to_parquet(pq_file, index=False, compression='gzip')
-    print(f'Wrote to {pq_file=} size:{os.stat(pq_file).st_size}')
+# for m in range(1, 13):
+#         # sets the month part of the file_name string
+#     month = f"{m:02}"
+#     pq_file = os.path.join("data",f"fhv_tripdata_2019-{month}.parquet")
+#     df = pd.read_parquet(pq_file, dtype_backend='numpy_nullable' )
+#     print(f'Read {pq_file=} size:{os.stat(pq_file).st_size} records:{df.shape[0]}')
+#     change_types = {"PUlocationID": "Int64", "DOlocationID": "Int64", "SR_Flag": "Int64"}
+#     df = df.astype(change_types)
+#     df.to_parquet(pq_file, index=False, compression='gzip')
+#     print(f'Wrote to {pq_file=} size:{os.stat(pq_file).st_size}')
+# %%
+# service ='green'
+# year = 2020
+# m = 1
+for service in ['yellow', 'green']:
+    for year in [2020,2021]:
+        for m in range(1, 13):
+            month = f"{m:02}"
+            pq_file = os.path.join("data",f"{service}_tripdata_{year}-{month}.parquet")
+            csv_file = pq_file.replace(".parquet", '.csv.gz')
+            # df = pd.read_parquet(pq_file)
+            ttable = duckdb.read_parquet(pq_file)
+            count_ = duckdb.sql("SELECT count(*) FROM ttable" ).df().loc[0,'count_star()']
+            # print(f'Read {pq_file=} size:{os.stat(pq_file).st_size} records:{df.shape[0]}')
+            print(f'Read     {pq_file=} size:{os.stat(pq_file).st_size:>12} records:{count_:>10}')
+            # df.to_csv(csv_file, index=False, compression='gzip')
+            ttable.write_csv(csv_file, header=True, compression='gzip')
+            print(f'Wrote to {csv_file=} size:{os.stat(csv_file).st_size:>12}')
+# %%
+df.info()
+# %%
+
+# # %%
+# csv_data = BytesIO(b'col1,col2\n1,2\n3,4')
+# duckdb.read_csv(csv_data, header=True).write_parquet('csv_data.parquet')
+# # %%
+# pq_file = r"data\yellow_tripdata_2019-12.parquet"
+# csv_file = pq_file.replace(".parquet", '.csv.gz')
+# duckdb.read_parquet(pq_file).write_csv(csv_file, header=True, compression='gzip')
+# # %%
+# duckdb.sql("SELECT  count(*) FROM y1912 limit 10" ).df()
+# # %%
+# print(list(zip(y1912.columns,y1912.types)))
+# # %%
+# # count_ = y1912.aggregate( "count(*)")
+# count_ = duckdb.sql("SELECT count(*) FROM y1912" ).df().loc[0,'count_star()']
+# count_
 # %%
