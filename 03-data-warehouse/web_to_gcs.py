@@ -92,7 +92,7 @@ web_to_gcs("2020", "yellow")
 # %%
 web_to_gcs("2019", "fhv")
 # %%
-import pandas as pd
+# import pandas as pd
 import os
 import duckdb
 # from io import BytesIO
