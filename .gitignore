@@ -16,3 +16,4 @@ logs/
 05-batch/code/*.csv.*
 05-batch/code/data
 05-batch/code/pq
+05-batch/code/tmp/green-revenue/*
